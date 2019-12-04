@@ -1,0 +1,16 @@
+name = "MLSuiteBase"
+uuid = "d01462b0-16b5-11ea-1c8e-eb7ed7586854"
+authors = ["Yao Lu <luyaocns@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+ScikitLearnBase = "6e75b9c4-186b-50bd-896f-2d2496a4843e"
+
+[compat]
+ScikitLearnBase = "0.5"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
