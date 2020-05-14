@@ -14,12 +14,12 @@ support_multiclass(m) = is_classifier(m)
 is_ranker(m) = false
 modelhash(m) = hash(m)
 
-gridparams(d::AbstractDict, combine = Iterators.product) =
-    [Dict(zip(keys(d), v)) for v in combine(values(d)...)]
+gridparams(grid, combine = Iterators.product) =
+    vec([merge(v...) for v in combine(gridparams.(grid)...)])
 
-gridparams(d::AbstractArray) = mapreduce(vec ∘ gridparams, vcat, d)
+gridparams(pair::Pair) = [Dict(pair[1] => v) for v in pair[2]]
 
-gridparams(x) = x
+gridparams(grid::Vector{<:Vector}) = mapreduce(gridparams, vcat, grid)
 
 Base.sign(x::Real, Θ) = ifelse(x < -Θ, oftype(x, -1), ifelse(x > Θ, one(x), zero(x)))
 
