@@ -5,7 +5,7 @@ module MLSuiteBase
 using JSON, SHA, Glob
 import ScikitLearnBase: is_classifier
 
-export @grid, gridparams, reset!, istree, isrnn, is_ranker, support_multiclass, signone, modelhash
+export @grid, gridparams, reset!, istree, isrnn, is_ranker, support_multiclass, signone, modelhash, available_memory
 
 reset!(m) = nothing
 istree(m) = false
@@ -86,6 +86,18 @@ macro grid(n, ex)
         foreach(sh -> chmod(sh, 0o775), glob("*.sh", dir))
     end
     return :(exit())
+end
+
+
+function available_memory()
+    if Sys.iswindows()
+        Sys.free_memory() / 1024^3
+    else
+        regex = r"MemAvailable:\s+(\d+)\s+kB"
+        meminfo = read("/proc/meminfo", String)
+        mem = match(regex, meminfo).captures[1]
+        parse(Int, mem) / 1024^2
+    end
 end
 
 end
