@@ -75,7 +75,6 @@ macro grid(n, ex)
         [ $? == 0 ] && touch done
         """)
         write(joinpath(dir, "slurm.sh"), project, raw"""
-        cd $(dirname $0)
         [ -f done ] && exit 0
         srun julia main.jl
         [ $? == 0 ] && touch done
