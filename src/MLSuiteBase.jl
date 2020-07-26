@@ -74,7 +74,7 @@ macro grid(n, ex)
         mpirun julia main.jl 2>&1 | tee mpi.out
         [ $? == 0 ] && touch done
         """)
-        write(joinpath(dir, "slurm.sh"), project, raw"""
+        write(joinpath(dir, "srun.sh"), project, raw"""
         [ -f done ] && exit 0
         srun julia main.jl
         [ $? == 0 ] && touch done
