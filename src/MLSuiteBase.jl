@@ -49,7 +49,8 @@ end
 macro grid(n, ex)
     params = __module__.eval(ex)
     file = string(__source__.file)
-    if !isfile(file) || isinteractive()
+    if !isfile(file) || isinteractive() ||
+        get(ENV, "GRID_ENABLE", "1") == "0"
         return params[1]
     end
     line = __source__.line
