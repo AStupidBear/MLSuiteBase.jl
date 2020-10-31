@@ -5,7 +5,7 @@ module MLSuiteBase
 using JSON, SHA, Glob
 import ScikitLearnBase: is_classifier
 
-export @grid, gridparams, reset!, istree, isrnn, is_ranker, support_multiclass, signone, modelhash, available_memory
+export @grid, gridparams, reset!, istree, isrnn, is_ranker, support_multiclass, signone, modelhash, available_memory, myparam, gendir
 
 reset!(m) = nothing
 istree(m) = false
@@ -88,6 +88,24 @@ macro grid(n, ex)
     return :(exit())
 end
 
+function myparam(params)
+    if haskey(ENV, "SLURM_ARRAY_TASK_ID")
+        i = parse(Int, ENV["SLURM_ARRAY_TASK_ID"]) + 1
+    elseif haskey(ENV, "PBS_ARRAYID")
+        i = parse(Int, ENV["PBS_ARRAYID"]) + 1
+    else
+        i = 1
+    end
+    i <= length(params) ? params[i] : exit(0)
+end
+
+function gendir(param)
+    dir = mkpath(bytes2hex(sha1(json(param))))
+    open(joinpath(dir, "param.json"), "w") do io
+        JSON.print(io, param, 4)
+    end
+    return dir
+end
 
 function available_memory()
     if Sys.iswindows()
