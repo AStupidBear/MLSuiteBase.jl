@@ -118,7 +118,7 @@ end
 
 function JSON.lower(a)
     if nfields(a) > 0
-        CompositeTypeWrapper(a)
+        JSON.Writer.CompositeTypeWrapper(a)
     else
         string(a)
     end
