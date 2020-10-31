@@ -1,5 +1,3 @@
-__precompile__(true)
-
 module MLSuiteBase
 
 using JSON, SHA, Glob
@@ -115,6 +113,14 @@ function available_memory()
         meminfo = read("/proc/meminfo", String)
         mem = match(regex, meminfo).captures[1]
         parse(Int, mem) / 1024^2
+    end
+end
+
+function JSON.lower(a)
+    if nfields(a) > 0
+        CompositeTypeWrapper(a)
+    else
+        string(a)
     end
 end
 
