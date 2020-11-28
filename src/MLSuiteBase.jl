@@ -88,9 +88,9 @@ end
 
 function myparam(params)
     if haskey(ENV, "SLURM_ARRAY_TASK_ID")
-        i = parse(Int, ENV["SLURM_ARRAY_TASK_ID"]) + 1
+        i = parse(Int, "0" * ENV["SLURM_ARRAY_TASK_ID"]) + 1
     elseif haskey(ENV, "PBS_ARRAYID")
-        i = parse(Int, ENV["PBS_ARRAYID"]) + 1
+        i = parse(Int, "0" * ENV["PBS_ARRAYID"]) + 1
     else
         i = 1
     end
