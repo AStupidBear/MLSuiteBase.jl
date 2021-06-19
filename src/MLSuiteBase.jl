@@ -13,7 +13,7 @@ is_ranker(m) = false
 modelhash(m) = hash(m)
 
 gridparams(grid, combine = Iterators.product) =
-    unique(vec([merge(v...) for v in combine(gridparams.(grid)...)]))
+    unique(vec([merge(v...) for v in combine(gridparams.(reverse(grid))...)]))
 
 gridparams(pair::Pair) = [Dict(pair[1] => v) for v in pair[2]]
 
