@@ -15,7 +15,7 @@ modelhash(m) = hash(m)
 gridparams(grid, combine = Iterators.product) =
     unique(vec([merge(v...) for v in combine(gridparams.(reverse(grid))...)]))
 
-gridparams(pair::Pair) = [Dict(pair[1] => v) for v in pair[2]]
+gridparams(pair::Pair) = [Dict{String, Any}(pair[1] => v) for v in pair[2]]
 
 gridparams(grid::Vector{<:Vector}) = mapreduce(gridparams, vcat, grid)
 
