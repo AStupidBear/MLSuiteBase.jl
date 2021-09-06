@@ -1,5 +1,4 @@
 # MLSuiteBase
 
-[![Build Status](https://travis-ci.com/AStupidBear/MLSuiteBase.jl.svg?branch=master)](https://travis-ci.com/AStupidBear/MLSuiteBase.jl)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/AStupidBear/MLSuiteBase.jl?svg=true)](https://ci.appveyor.com/project/AStupidBear/MLSuiteBase-jl)
+[![Build Status](https://github.com/AStupidBear/MLSuiteBase.jl/workflows/CI/badge.svg)](https://github.com/AStupidBear/MLSuiteBase.jl/actions)
 [![Coverage](https://codecov.io/gh/AStupidBear/MLSuiteBase.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/AStupidBear/MLSuiteBase.jl)
