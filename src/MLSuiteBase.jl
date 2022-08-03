@@ -4,6 +4,7 @@ using JSON, SHA, Glob
 import ScikitLearnBase: is_classifier
 
 export @grid, gridparams, reset!, istree, isrnn, is_ranker, support_multiclass, signone, modelhash, available_memory, myparam, gendir
+export @gc, @staticvar, @staticdef, @redirect, logerr, @tryonce, prefix, suffix
 
 reset!(m) = nothing
 istree(m) = false
@@ -123,5 +124,80 @@ function JSON.lower(a)
         string(a)
     end
 end
+
+macro gc(exs...)
+    Expr(:block, [:($ex = 0) for ex in exs]..., :(@eval GC.gc())) |> esc
+end
+
+macro staticvar(init)
+    var = gensym()
+    __module__.eval(:(const $var = $init))
+    var = esc(var)
+    quote
+        global $var
+        $var
+    end
+end
+
+macro staticdef(ex)
+    name, T = ex.args[1].args
+    ref = Ref{__module__.eval(T)}()
+    set = Ref(false)
+    :($(esc(name)) = if $set[]
+        $ref[]
+    else
+        $ref[] = $(esc(ex))
+        $set[] = true
+        $ref[]
+    end)
+end
+
+macro redirect(src, ex)
+    src = src == :devnull ? "/dev/null" : src
+    quote
+        io = open($(esc(src)), "a")
+        o, e = stdout, stderr
+        redirect_stdout(io)
+        redirect_stderr(io)
+        res = nothing
+        try
+            res = $(esc(ex))
+            sleep(0.01)
+        finally
+            flush(io)
+            close(io)
+            redirect_stdout(o)
+            redirect_stderr(e)
+        end
+        res
+    end
+end
+
+function logerr(e, comment = "", fname = "try.err", mode = "a")
+    e isa InterruptException && rethrow()
+    io = IOBuffer()
+    print(io, '-'^15, gethostname(), '-'^15, '\n', e)
+    bt = stacktrace(catch_backtrace())
+    showerror(io, e, bt)
+    println(io)
+    str = join(Iterators.take(String(take!(io)), 10000))
+    str = join(map(l -> join(Iterators.take(l, 400)), split(str, '\n')), '\n')
+    println(stdout, comment)
+    println(stdout, str)
+    flush(stdout)
+    open(fname, mode) do fid
+        println(fid, comment)
+        println(fid, str)
+    end
+end
+
+macro tryonce(ex)
+    ex = Expr(:try, ex, :e, :(logerr(e)))
+    return esc(ex)
+end
+
+prefix(str) = String(split(str, '.')[1])
+
+suffix(str) = String(split(str, '.')[end])
 
 end
