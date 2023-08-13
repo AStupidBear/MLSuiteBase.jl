@@ -159,7 +159,7 @@ macro redirect(src, ex)
         o, e = stdout, stderr
         redirect_stdout(io)
         redirect_stderr(io)
-        res = nothing
+        local res = nothing
         try
             res = $(esc(ex))
             sleep(0.01)
