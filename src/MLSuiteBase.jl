@@ -124,14 +124,6 @@ function available_memory()
     end
 end
 
-function JSON.lower(a)
-    if nfields(a) > 0
-        JSON.Writer.CompositeTypeWrapper(a)
-    else
-        string(a)
-    end
-end
-
 macro gc(exs...)
     Expr(:block, [:($ex = 0) for ex in exs]..., :(@eval GC.gc())) |> esc
 end
